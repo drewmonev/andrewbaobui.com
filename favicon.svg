@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="w" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1c2320"/><stop offset="1" stop-color="#070908"/>
+    </linearGradient>
+    <linearGradient id="s" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c4c6bf"/><stop offset=".55" stop-color="#6f716b"/><stop offset="1" stop-color="#2a2b29"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="12" fill="url(#w)"/>
+  <path d="M6 13 Q16 11.5 26 13 T46 13 T58 13" fill="none" stroke="#6b7470" stroke-width="2" stroke-linecap="round"/>
+  <!-- stones -->
+  <path d="M13 50 L17 37 L21 30 L24 22 L28 18 L31 24 L34 31 L36 40 L38 50 Z" fill="url(#s)"/>
+  <path d="M24 22 L28 18 L27 31 L24 44 L21 30 Z" fill="#e6e7e1" opacity=".35"/>
+  <path d="M6 51 L9 44 L12 42 L15 45 L16 51 Z" fill="url(#s)"/>
+  <path d="M42 51 L45 42 L49 37 L53 40 L56 46 L57 51 Z" fill="url(#s)"/>
+  <!-- carpet -->
+  <path d="M0 50 Q10 46 20 49 T40 49 T64 48 V64 H0 Z" fill="#3b7f24"/>
+  <path d="M0 50 Q10 46 20 49 T40 49 T64 48" fill="none" stroke="#8fd85a" stroke-width="2" stroke-dasharray="1.5 2.5"/>
+  <rect y="57" width="64" height="7" fill="#120e0a"/>
+  <rect width="64" height="64" rx="12" fill="none" stroke="#2a3130" stroke-width="2"/>
+</svg>
