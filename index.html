@@ -1,0 +1,1057 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Andrew Bui</title>
+<meta name="description" content="Andrew Bui — builds small, useful software.">
+<meta name="theme-color" content="#050607">
+<meta property="og:title" content="Andrew Bui">
+<meta property="og:url" content="https://andrewbaobui.com">
+<meta property="og:type" content="website">
+<meta property="og:description" content="Projects, resume and contact for Andrew Bui.">
+<meta property="og:image" content="https://andrewbaobui.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="An ASCII-art aquarium with the name Andrew Bui and andrewbaobui.com">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23050607'/><text x='50%25' y='55%25' text-anchor='middle' dominant-baseline='middle' font-family='Menlo,monospace' font-size='22' fill='%23e8e8e6'>&gt;&lt;&gt;</text></svg>">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #050607;
+    --ink: #e8e8e6;
+    --muted: #6f7372;
+    --line: #1a1c1d;
+    --green: #9ccf86;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  html, body { background: var(--bg); }
+  body { margin: 0; color: var(--ink); font: 14px/1.7 var(--mono); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  a:hover { color: var(--muted); }
+  ::selection { background: var(--ink); color: var(--bg); }
+  .muted { color: var(--muted); }
+
+  /* ---------- Top nav ---------- */
+  .topnav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    padding: 18px 24px; font-size: 12px; transition: background .3s ease, padding .3s ease;
+  }
+  .topnav.scrolled { background: rgba(5,6,7,.72); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); padding-top: 12px; padding-bottom: 12px; }
+  .tn-name { font-size: 14px; }
+  .tn-links { display: flex; gap: 20px; }
+  .tn-links a { color: var(--muted); }
+  .tn-links a:hover, .tn-name:hover { color: var(--ink); }
+  #work, #contact { scroll-margin-top: 64px; }
+  @media (max-width: 560px) { .topnav { padding: 14px 16px; } .topnav.scrolled { padding-top: 10px; padding-bottom: 10px; } .tn-links { gap: 14px; } .tn-name { font-size: 13px; } }
+
+  /* ---------- Tank ---------- */
+  .tank {
+    position: relative; height: clamp(480px, 62vw, 100svh); overflow: hidden;
+    cursor: crosshair; touch-action: pan-y; user-select: none; -webkit-user-select: none;
+  }
+  @media (min-width: 900px) { .tank { height: max(600px, 100svh); } }
+  .tank pre { margin: 0; font: 7px/1 var(--mono); color: #d3d9d6; white-space: pre; pointer-events: none; }
+  .tank pre .g { color: var(--green); }
+  .tank pre .r { color: #e8755f; }
+  .tank pre .b { color: #5cc8ff; }
+  @media (max-width: 560px) { .tank pre { font-size: 6px; } }
+  .overlay { position: absolute; left: 0; right: 0; padding: 20px 24px; display: flex; justify-content: space-between; gap: 16px; font-size: 12px; pointer-events: none; }
+  .overlay > * { pointer-events: auto; }
+  .overlay.bottom { bottom: 0; justify-content: flex-start; }
+  .hint { color: var(--muted); text-align: right; }
+
+  /* Centre text: fades in after a few seconds */
+  .center {
+    position: absolute; left: 50%; top: 44%; transform: translate(-50%, -50%);
+    text-align: center; padding: 48px 72px; max-width: 100%; cursor: default;
+    background: radial-gradient(closest-side, rgba(5,6,7,.9), rgba(5,6,7,.6) 55%, rgba(5,6,7,0));
+    opacity: 0; visibility: hidden; transition: opacity 1.6s ease, visibility 0s linear 1.6s;
+  }
+  @media (min-width: 900px) { .center { top: 46%; } }
+  .tank.revealed .center { opacity: 1; visibility: visible; transition: opacity 1.6s ease; }
+  .center p { margin: 0; color: var(--muted); }
+  .center .nm { color: var(--ink); }
+  .center a { display: inline-block; margin-top: 20px; color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+  .center a:hover { color: var(--muted); }
+  @media (prefers-reduced-motion: reduce) { .center { transition: none; } }
+
+  /* ---------- Info ---------- */
+  main { max-width: 560px; margin: 0 auto; padding: 80px 24px; }
+  .intro { margin: 0 0 40px; position: relative; }
+  .me-tog { background: none; border: 0; padding: 0; font: inherit; color: inherit; cursor: pointer; text-align: left; }
+  .me-tog:hover .muted, .me-tog[aria-expanded="true"] .muted { color: var(--ink); }
+  .mk2 { font-style: normal; }
+  .me-ov {
+    position: fixed; inset: 0; z-index: 205; display: grid; place-items: center; padding: 24px 16px; overflow-y: auto;
+    background: rgba(5,6,7,.55); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); animation: rv-fade .3s ease;
+  }
+  .me-ov[hidden] { display: none; }
+  .me {
+    position: relative; width: min(860px, 100%); min-height: min(520px, 70vh);
+    display: grid; grid-template-columns: minmax(200px, 42%) 1fr; gap: 40px; align-items: center;
+    padding: 48px; background: #0c0e0f; border: 1px solid var(--line); border-radius: 16px;
+    box-shadow: 0 30px 80px rgba(0,0,0,.6); font-size: 15px; line-height: 1.75;
+    animation: rv-rise .4s cubic-bezier(.2,.7,.2,1);
+  }
+  .me h2 { color: var(--ink); font-size: 18px; margin: 0 0 16px; }
+  .me p { margin: 0 0 14px; }
+  .me-x { position: absolute; top: 16px; right: 20px; background: none; border: 0; padding: 0; font: inherit; font-size: 12px; color: var(--muted); cursor: pointer; }
+  .me-x:hover { color: var(--ink); }
+  .me-pic { position: relative; aspect-ratio: 1; border-radius: 14px; overflow: hidden; background: #1b1f20; display: grid; place-items: center; color: var(--muted); font-size: 32px; }
+  .me-pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  @media (prefers-reduced-motion: reduce) { .me-ov, .me { animation: none; } }
+  @media (max-width: 640px) {
+    .me { grid-template-columns: 1fr; gap: 24px; padding: 48px 24px 28px; min-height: 0; font-size: 14px; }
+    .me-pic { width: min(220px, 70%); justify-self: center; }
+  }
+  h1 { font-size: 14px; font-weight: 400; margin: 0; }
+  h2 { font-size: 14px; font-weight: 400; color: var(--muted); margin: 0 0 8px; }
+  .head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin: 0 0 8px; }
+  .head h2 { margin: 0; }
+  .filters { display: flex; gap: 14px; flex-wrap: wrap; justify-content: flex-end; }
+  .filters button { background: none; border: 0; padding: 0; font: inherit; color: var(--muted); cursor: pointer; }
+  .filters button:hover { color: var(--ink); }
+  .filters button[aria-pressed="true"] { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+  li[hidden], #workList li[hidden] { display: none; }
+
+  /* project rows that open into a strip of screenshots */
+  #workList li { display: block; padding: 0; }
+  #workList .row { display: flex; justify-content: space-between; gap: 24px; padding: 2px 0; }
+  .desc { color: var(--muted); text-align: right; }
+  .more[hidden] { display: none; }
+  .skills { margin: 4px 0 8px; padding-left: 2ch; font-size: 12px; color: var(--muted); }
+  .more .shots { padding-top: 2px; }
+  .mk { display: inline-block; width: 2ch; color: var(--muted); font-style: normal; }
+  .tog { background: none; border: 0; padding: 0; font: inherit; color: inherit; cursor: pointer; text-align: left; }
+  .tog:hover { color: var(--muted); }
+  .ext { color: var(--muted); }
+  .ext:hover { color: var(--ink); }
+  .shots { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0 18px 2ch; scroll-snap-type: x mandatory; scrollbar-width: thin; scrollbar-color: #2a2e30 transparent; }
+  .shots[hidden] { display: none; }
+  .shots img {
+    flex: none; height: 260px; width: auto; border-radius: 6px; background: #111;
+    filter: grayscale(1) brightness(.55); transition: filter .5s ease; cursor: zoom-in; scroll-snap-align: start;
+  }
+  .shots img:hover, .shots img:focus-visible { filter: none; outline: none; }
+
+  /* full-size viewer */
+  .lb { position: fixed; inset: 0; z-index: 200; background: rgba(5,6,7,.95); display: flex; align-items: center; justify-content: center; cursor: zoom-out; }
+  .lb[hidden] { display: none; }
+  .lb img { max-width: 92vw; max-height: 88vh; border-radius: 8px; }
+  .lb p { position: absolute; bottom: 16px; left: 0; right: 0; margin: 0; text-align: center; color: var(--muted); font-size: 12px; }
+  /* resume viewer */
+  .rv { position: fixed; inset: 0; z-index: 210; background: rgba(5,6,7,.55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); overflow-y: auto; overscroll-behavior: contain; padding: 0 16px 40px; animation: rv-fade .35s ease; }
+  .rv img { animation: rv-rise .45s cubic-bezier(.2,.7,.2,1); box-shadow: 0 24px 60px rgba(0,0,0,.5); }
+  @keyframes rv-fade { from { opacity: 0; } }
+  @keyframes rv-rise { from { opacity: 0; transform: translateY(16px) scale(.985); } }
+  @media (prefers-reduced-motion: reduce) { .rv, .rv img { animation: none; } }
+  .rv[hidden] { display: none; }
+  .rv-bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; max-width: 816px; margin: 0 auto; padding: 16px 0; font-size: 12px; text-shadow: 0 1px 8px rgba(0,0,0,.8); }
+  .rv-acts { display: flex; gap: 18px; flex-wrap: wrap; justify-content: flex-end; }
+  .rv-acts a:hover, .rv-acts button:hover { color: var(--muted); }
+  .rv-acts button { background: none; border: 0; padding: 0; font: inherit; color: var(--ink); cursor: pointer; }
+  .rv img { display: block; width: 100%; max-width: 816px; height: auto; margin: 0 auto; background: #fff; border-radius: 4px; }
+  ul { list-style: none; margin: 0 0 36px; padding: 0; }
+  li { display: flex; justify-content: space-between; gap: 24px; padding: 2px 0; }
+  li span:last-child { color: var(--muted); text-align: right; }
+  /* touch screens: no hover, so show screenshots in colour and give links room to tap */
+  @media (hover: none) {
+    .shots img { filter: none; }
+    .tn-links a, .filters button { padding: 8px 0; }
+    .tog { padding: 4px 0; }
+  }
+  footer { color: var(--muted); padding-top: 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 12px; }
+  footer a:hover { color: var(--ink); }
+
+  @media (max-width: 560px) {
+    .overlay { padding: 16px; }
+    main { padding: 36px 16px 56px; }
+    .center { display: none; }               /* the name and line are just below the tank; the nav covers the links */
+    .overlay.bottom { padding-bottom: 12px; }
+    li { flex-direction: column; gap: 0; padding: 4px 0; }
+    .head { flex-direction: column; gap: 4px; }
+    .filters { justify-content: flex-start; }
+    #workList .row { flex-direction: column; gap: 0; padding: 4px 0; }
+    #workList .desc { text-align: left; padding-left: 2ch; }
+    .shots { padding-left: 0; }
+    .shots img { height: 220px; }
+    li span:last-child { text-align: left; }
+  }
+</style>
+</head>
+<body id="top">
+
+<nav class="topnav" id="topnav" aria-label="Site">
+  <a href="#top" class="tn-name">Andrew Bui</a>
+  <span class="tn-links"><a href="#work">projects</a><a href="#about" id="navAbout">about</a><a href="resume.pdf" id="navResume">resume</a><a href="#contact">contact</a></span>
+</nav>
+
+<section class="tank" id="tank" aria-label="Interactive ASCII aquarium: a school of fish swims and cherry shrimp graze over an aquascape of stones and carpet plants. Move to scatter the fish; click to feed them.">
+  <pre id="tankPre" aria-hidden="true"></pre>
+  <div class="overlay bottom">
+    <span class="hint" id="hint">click to feed</span>
+  </div>
+  <div class="center" id="center">
+    <p class="nm">Andrew Bui</p>
+    <p>Builds small, useful software.</p>
+    <a href="#work">view projects ↓</a>
+  </div>
+</section>
+
+<main id="about">
+  <div class="intro">
+    <h1><button class="me-tog" id="meTog" aria-expanded="false" aria-controls="me">Andrew Bui <span class="muted">· about me <i class="mk2">+</i></span></button></h1>
+  </div>
+
+  <div class="head" id="work">
+    <h2>Projects</h2>
+    <div class="filters" data-list="workList">
+      <button data-cat="all" aria-pressed="true">all</button>
+      <button data-cat="personal" aria-pressed="false">personal</button>
+      <button data-cat="work" aria-pressed="false">work</button>
+      <button data-cat="community" aria-pressed="false">community</button>
+    </div>
+  </div>
+  <ul id="workList">
+    <li data-cat="personal">
+      <div class="row">
+        <span><button class="tog" aria-expanded="false" aria-controls="s-waffle"><i class="mk">+</i>Waffle</button> <a class="ext" href="https://www.feedwaffle.com" target="_blank" rel="noopener" aria-label="Waffle website">↗</a></span>
+        <span class="desc">photo habit app</span>
+      </div>
+      <div class="more" id="s-waffle" hidden>
+        <p class="skills">react native · expo · typescript · supabase · swift (widgets)</p>
+        <div class="shots"
+           data-imgs="shots/waffle-1-feed.jpg|shots/waffle-2-plate.jpg|shots/waffle-3-waffle.jpg|shots/waffle-5-widget.jpg"
+           data-alt="Waffle feed: one photo a day with friends|Every habit gets its own waffle|A month of photos in one grid|Streak widget on the home screen"></div>
+      </div>
+    </li>
+    <li data-cat="personal">
+      <div class="row">
+        <span><button class="tog" aria-expanded="false" aria-controls="s-site"><i class="mk">+</i>Personal Website</button></span>
+        <span class="desc">this site · ascii aquarium</span>
+      </div>
+      <div class="more" id="s-site" hidden>
+        <p class="skills">html · css · javascript · canvas</p>
+      </div>
+    </li>
+    <li data-cat="community">
+      <div class="row">
+        <span><button class="tog" aria-expanded="false" aria-controls="s-bsbakes"><i class="mk">+</i>B's Bakes</button> <a class="ext" href="https://bsbakes.com" target="_blank" rel="noopener" aria-label="B's Bakes website">↗</a></span>
+        <span class="desc">bakery ordering system</span>
+      </div>
+      <div class="more" id="s-bsbakes" hidden>
+        <p class="skills">javascript · google apps script · google sheets · cloudflare workers · three.js</p>
+        <div class="shots"
+           data-imgs="shots/bsbakes-01-hero.jpg|shots/bsbakes-04-ordering.jpg|shots/bsbakes-03-phones.jpg|shots/bsbakes-02-dashboard.jpg|shots/bsbakes-05-calendar.jpg|shots/bsbakes-06-kitchen-phone.jpg"
+           data-alt="B's Bakes website and the owner's day view on a phone|Pickup ordering flow and the confirmation email|Storefront, today's bake list and an order on phones|Kitchen dashboard: sales overview|Kitchen dashboard: monthly calendar of orders|Kitchen app on phones: orders, pickup spot and inquiries"></div>
+      </div>
+    </li>
+    <li data-cat="community">
+      <div class="row">
+        <span><button class="tog" aria-expanded="false" aria-controls="s-westview"><i class="mk">+</i>Westview Docs</button></span>
+        <span class="desc">HVAC paperwork assistant</span>
+      </div>
+      <div class="more" id="s-westview" hidden>
+        <p class="skills">claude projects · prompt design · javascript · html/css</p>
+        <div class="shots"
+           data-imgs="shots/westview-01-text-a-job.jpg|shots/westview-02-workflow.jpg|shots/westview-03-invoice-maker.jpg|shots/westview-04-proposal-maker.jpg|shots/westview-05-proposal-pdf.jpg|shots/westview-06-brand.jpg"
+           data-alt="Westview Docs: a one-line job text becomes a branded invoice PDF|A proposal texted from the job site comes back as a finished PDF|Estimate and invoice maker with quick-add price list|Proposal maker with ducted and ductless starter scopes|A finished two-page proposal with payment terms and standard terms|Westview brand system: logo versions and colours"></div>
+      </div>
+    </li>
+    <li data-cat="work">
+      <div class="row">
+        <span><button class="tog" aria-expanded="false" aria-controls="s-carrier"><i class="mk">+</i>Carrier Maker</button></span>
+        <span class="desc">PCB fixture designer</span>
+      </div>
+      <div class="more" id="s-carrier" hidden>
+        <div class="shots"
+           data-imgs="shots/carrier-01-3d.jpg|shots/carrier-02-design.jpg"
+           data-alt="Carrier Maker: 3D preview of a PCB carrier plate with supports and clamps|Carrier Maker: design view laying out supports, clamps, cut-outs and the cut list"></div>
+      </div>
+    </li>
+    <li data-cat="work">
+      <div class="row">
+        <span><button class="tog" aria-expanded="false" aria-controls="s-tracker"><i class="mk">+</i>Production Tracker</button></span>
+        <span class="desc">team dashboard</span>
+      </div>
+      <div class="more" id="s-tracker" hidden>
+        <p class="skills">python · sqlite · javascript · html/css</p>
+        <div class="shots"
+           data-imgs="shots/tracker-01-active-board.jpg|shots/tracker-02-job-detail.jpg|shots/tracker-03-test-results.jpg|shots/tracker-04-report.jpg|shots/tracker-05-printed-overview.jpg|shots/tracker-06-floor-tv.jpg"
+           data-alt="Production Tracker: active board of received and in-progress jobs by machine|A job opened up: machine stages, work log, record and test results|Logging pass/fail test results per board serial|Monthly report: boards tested, pass rate and failures per job|Printed production overview with machine load and pipeline|Floor TV screen with priority jobs and shift notes"></div>
+      </div>
+    </li>
+    <li data-cat="work">
+      <div class="row">
+        <span><button class="tog" aria-expanded="false" aria-controls="s-xray"><i class="mk">+</i>X-ray Batch</button></span>
+        <span class="desc">batch automation</span>
+      </div>
+      <div class="more" id="s-xray" hidden>
+        <p class="skills">react · typescript · vite · indexeddb · jspdf</p>
+      </div>
+    </li>
+  </ul>
+
+  <h2 id="contact">Elsewhere</h2>
+  <ul>
+    <li><a href="resume.pdf" target="_blank" rel="noopener" id="rvOpen">Resume ↗</a><span>one-page PDF</span></li>
+    <li><a href="https://www.linkedin.com/in/andrew-bui1/" target="_blank" rel="noopener">LinkedIn ↗</a><span>andrew-bui1</span></li>
+    <li><a href="https://www.instagram.com/drewmonev/" target="_blank" rel="noopener">Instagram ↗</a><span>drewmonev</span></li>
+    <li><a href="mailto:hello@andrewbaobui.com">Email ↗</a><span>hello@andrewbaobui.com</span></li>
+  </ul>
+
+  <footer><span>© <span id="year">2026</span> Andrew Bui · San Jose, CA</span><a href="#top">back to top ↑</a></footer>
+</main>
+
+<div class="lb" id="lb" hidden role="dialog" aria-label="Screenshot"><img alt=""><p>esc to close · ← → to browse</p></div>
+
+<div class="me-ov" id="me" hidden role="dialog" aria-modal="true" aria-label="About Andrew">
+  <div class="me">
+    <button type="button" class="me-x" id="meClose">close ×</button>
+    <div class="me-pic"><img src="shots/me.jpg" alt="Andrew Bui" width="640" height="640" onerror="this.remove()"><span aria-hidden="true">AB</span></div>
+    <div class="me-txt">
+      <h2>Andrew Bui</h2>
+      <p>I study Management Information Systems at San Jose State and work as a test engineer intern at Datest, programming flying-probe and X-ray inspection for circuit boards.</p>
+      <p>I love solving problems, especially finding practical solutions for business owners and communities: a bakery's ordering site, paperwork help for an HVAC contractor, a photo app for friends.</p>
+      <p class="muted">Away from the screen I keep aquariums and go climbing.</p>
+    </div>
+  </div>
+</div>
+
+<div class="rv" id="rv" hidden role="dialog" aria-modal="true" aria-label="Resume">
+  <div class="rv-bar">
+    <span class="muted">resume</span>
+    <span class="rv-acts"><a href="resume.pdf" download="Andrew_Bui_Resume.pdf">download ↓</a><a href="resume.pdf" target="_blank" rel="noopener">open pdf ↗</a><button type="button" id="rvClose">close ×</button></span>
+  </div>
+  <img alt="Andrew Bui's resume: education at San Jose State University, test engineering work at Datest, the Waffle app, and skills" width="1700" height="2200">
+</div>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// Top nav: tint once the page scrolls; about and resume open their panels
+var topnav = document.getElementById('topnav');
+function navTint() { topnav.classList.toggle('scrolled', scrollY > 8); }
+addEventListener('scroll', navTint, { passive: true }); navTint();
+document.getElementById('navResume').addEventListener('click', function (e) {
+  if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+  e.preventDefault(); document.getElementById('rvOpen').click();
+});
+
+// About me: the name opens a large floating card with a photo and a few lines
+var me = document.getElementById('me'), meTog = document.getElementById('meTog');
+function meSet(open) {
+  me.hidden = !open; meTog.setAttribute('aria-expanded', String(open));
+  meTog.querySelector('.mk2').textContent = open ? '\u2212' : '+';
+  document.body.style.overflow = open ? 'hidden' : '';
+  if (open) document.getElementById('meClose').focus(); else meTog.focus();
+}
+meTog.addEventListener('click', function () { meSet(true); });
+document.getElementById('navAbout').addEventListener('click', function (e) { e.preventDefault(); meSet(true); });
+document.getElementById('meClose').addEventListener('click', function () { meSet(false); });
+me.addEventListener('click', function (e) { if (e.target === me) meSet(false); });
+addEventListener('keydown', function (e) { if (e.key === 'Escape' && !me.hidden) meSet(false); });
+
+// Resume: preview it on the page; ctrl/cmd-click still opens the PDF itself
+var rv = document.getElementById('rv'), rvOpen = document.getElementById('rvOpen'), rvClose = document.getElementById('rvClose');
+rvOpen.addEventListener('click', function (e) {
+  if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+  e.preventDefault();
+  var im = rv.querySelector('img'); if (!im.src) im.src = 'shots/resume.png';
+  rv.hidden = false; rv.scrollTop = 0; document.body.style.overflow = 'hidden'; rvClose.focus();
+});
+function rvHide() { rv.hidden = true; document.body.style.overflow = ''; rvOpen.focus(); }
+rvClose.addEventListener('click', rvHide);
+rv.addEventListener('click', function (e) { if (e.target === rv) rvHide(); });
+addEventListener('keydown', function (e) { if (e.key === 'Escape' && !rv.hidden) rvHide(); });
+
+// Project rows: open a strip of screenshots (images load on first open)
+var lb = document.getElementById('lb'), lbImg = lb.querySelector('img'), lbSet = [], lbIdx = 0;
+function lbShow() { lbImg.src = lbSet[lbIdx].src; lbImg.alt = lbSet[lbIdx].alt; }
+function lbOpen(box, i) { lbSet = [].slice.call(box.querySelectorAll('img')); lbIdx = i; lbShow(); lb.hidden = false; }
+function lbClose() { lb.hidden = true; lbImg.removeAttribute('src'); }
+lb.addEventListener('click', lbClose);
+// touch: swipe between screenshots, and say "tap" rather than "click"
+var touch = matchMedia('(hover: none)').matches, sx = null;
+if (touch) {
+  lb.querySelector('p').textContent = 'tap to close · swipe to browse';
+  document.getElementById('hint').textContent = 'tap to feed';
+}
+lb.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
+lb.addEventListener('touchend', function (e) {
+  if (sx === null) return;
+  var dx = e.changedTouches[0].clientX - sx; sx = null;
+  if (Math.abs(dx) < 40) return;
+  e.preventDefault();                       // a swipe is not a tap-to-close
+  lbIdx = (lbIdx + (dx < 0 ? 1 : lbSet.length - 1)) % lbSet.length; lbShow();
+});
+addEventListener('keydown', function (e) {
+  if (lb.hidden) return;
+  if (e.key === 'Escape') lbClose();
+  if (e.key === 'ArrowRight') { lbIdx = (lbIdx + 1) % lbSet.length; lbShow(); }
+  if (e.key === 'ArrowLeft') { lbIdx = (lbIdx + lbSet.length - 1) % lbSet.length; lbShow(); }
+});
+document.querySelectorAll('#workList .tog').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var box = document.getElementById(btn.getAttribute('aria-controls')), open = btn.getAttribute('aria-expanded') !== 'true';
+    var strip = box.querySelector('.shots');
+    if (open && strip && !strip.dataset.loaded) {
+      var alts = (strip.dataset.alt || '').split('|');
+      strip.dataset.imgs.split('|').forEach(function (src, i) {
+        var im = new Image(); im.src = src; im.alt = alts[i] || ''; im.tabIndex = 0; im.decoding = 'async';
+        im.addEventListener('click', function () { lbOpen(strip, i); });
+        im.addEventListener('keydown', function (e) { if (e.key === 'Enter') lbOpen(strip, i); });
+        strip.appendChild(im);
+      });
+      strip.dataset.loaded = '1';
+    }
+    box.hidden = !open;
+    btn.setAttribute('aria-expanded', String(open));
+    btn.querySelector('.mk').textContent = open ? '−' : '+';
+  });
+});
+
+// Category filters: each row of filters shows one category of its list at a time
+document.querySelectorAll('.filters').forEach(function (bar) {
+  bar.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var cat = b.dataset.cat;
+    bar.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+    document.querySelectorAll('#' + bar.dataset.list + ' > li').forEach(function (li) { li.hidden = cat !== 'all' && li.dataset.cat !== cat; });
+  });
+});
+
+/* ============ Interactive ASCII aquascape ============
+   The scene (water, stones, carpet, fish, shrimp) is painted onto a tiny
+   offscreen canvas with one pixel per character cell. Each pixel's brightness
+   picks a character and its hue picks the colour, like video-to-ASCII. */
+(function () {
+  var tank = document.getElementById('tank'), pre = document.getElementById('tankPre');
+  var RAMP = " .'`^\",:;Il!i~+_-?][}{1)(|/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
+  var FPS = 24;
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cv = document.createElement('canvas'), ctx = cv.getContext('2d', { willReadFrequently: true });
+  var W, H, cols, rows, OW, OH, OX = 0, OY = 0, framed = false, fish = [], shrimp = [], food = [], rocks = [], blades = [], tufts = [];
+  var mouse = null, t = 0, visible = true, raf = 0, last = 0;
+  var ripples = [], drops = [];
+
+  /* ---- water surface: a gentle swell, plus rings where a fish drops back in ---- */
+  var RING_SPEED = 2.6;
+  function swell(x) { return H * 0.075 + Math.sin(x * 0.03 + t * 1.5) * 1.5; }
+  function waterY(x) {
+    var y = swell(x);
+    for (var i = 0; i < ripples.length; i++) {
+      var r = ripples[i], dist = Math.abs(x - r.x);
+      if (dist > r.age * RING_SPEED) continue;                 // the wave hasn't reached here yet
+      y += r.a * Math.exp(-r.age / 22 - dist / 90) * Math.sin(dist * 0.22 - r.age * 0.55);
+    }
+    return y;
+  }
+  function splash(x, size) {
+    if (ripples.length > 8) ripples.shift();
+    ripples.push({ x: x, age: 0, a: 3 + size * 0.08 });
+    for (var i = 0, n = 3 + (size / 15 | 0); i < n; i++)
+      drops.push({ x: x + rand(-4, 4), y: swell(x), vx: rand(-1.4, 1.4), vy: -rand(1.6, 3.2) });
+  }
+
+  var rng = Math.random;
+  function rand(a, b) { return a + rng() * (b - a); }
+  // Small seeded generator, so the stones come out the same on every visit.
+  function seeded(seed) {
+    return function () {
+      seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+      var x = Math.imul(seed ^ seed >>> 15, 1 | seed);
+      x = x + Math.imul(x ^ x >>> 7, 61 | x) ^ x;
+      return ((x ^ x >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  var SCAPE_SEED = 7;
+  function S() { return Math.max(W, H * 1.6); }          // size scale for stones
+  function ground(x) { var u = x / W; return H * (0.74 + 0.05 * u - 0.07 * Math.exp(-Math.pow((u - 0.3) / 0.22, 2))); }
+  var SOIL = 0.9;
+
+  /* ---- scape pieces (stored in relative units so they survive resizes) ---- */
+  // Seiryu-style stone. Everything is stored in units of the stone's width (x)
+  // and height (y, measured up from the base) so it scales with the tank.
+  function makeRock(fx, fw, fh, lean) {
+    var i, k, base = [], n = 9;
+    for (i = 0; i <= n; i++) {
+      var a = Math.PI * (1 - i / n), edge = i === 0 || i === n;
+      var rad = edge ? 1 : rand(0.84, 1.08);
+      var y = Math.pow(Math.sin(a), 0.7) * rad;
+      base.push([Math.cos(a) * 0.5 * rad + lean * y * 0.35, edge ? -0.05 : y]);
+    }
+    // fractal edge: subdivide and displace three times for a jagged outline
+    var pts = base;
+    for (var lvl = 0; lvl < 3; lvl++) {
+      var np = [pts[0]], amt = 0.085 / Math.pow(1.9, lvl);
+      for (i = 0; i < pts.length - 1; i++) {
+        var p = pts[i], q = pts[i + 1], dx = q[0] - p[0], dy = q[1] - p[1], len = Math.hypot(dx, dy) || 1, d = rand(-1, 1) * amt;
+        np.push([(p[0] + q[0]) / 2 - dy / len * d, Math.max(0.02, (p[1] + q[1]) / 2 + dx / len * d)], q);
+      }
+      pts = np;
+    }
+    var top = pts.slice(1, -1);
+
+    // facets: strips running from the ridge line down to the base, following the lean
+    var facets = [], F = 8, idx = [];
+    for (k = 0; k <= F; k++) idx.push(Math.round(k / F * (top.length - 1)));
+    for (k = 0; k < F; k++) {
+      var t1 = top[idx[k]], t2 = top[idx[k + 1]], cxm = (t1[0] + t2[0]) / 2;
+      var drift = -lean * 0.25;
+      facets.push({
+        poly: [t1, t2, [t2[0] + drift * t2[1] + rand(-0.04, 0.04), -0.05], [t1[0] + drift * t1[1] + rand(-0.04, 0.04), -0.05]],
+        l: Math.max(0, Math.min(1, 0.5 - cxm * 0.8 + rand(-0.28, 0.28)))     // light comes from the upper left
+      });
+    }
+    // grooves (some branching), calcite veins and ledges
+    function wander(x, y, steps, dxr, dyr) {
+      var line = [[x, y]];
+      for (var s = 0; s < steps; s++) { x += rand(-dxr, dxr) - lean * 0.04; y -= rand(dyr * 0.5, dyr); line.push([x, y]); }
+      return line;
+    }
+    var grooves = [], veins = [], ledges = [], pits = [];
+    for (i = 0; i < 14; i++) {
+      var g = wander(rand(-0.42, 0.42), rand(0.35, 1.0), (rand(3, 7)) | 0, 0.05, 0.14);
+      grooves.push(g);
+      if (rng() < 0.35) { var m = g[(g.length / 2) | 0]; grooves.push(wander(m[0], m[1], 3, 0.09, 0.1)); }
+    }
+    for (i = 0; i < 5; i++) veins.push(wander(rand(-0.35, 0.35), rand(0.5, 0.95), 6, 0.03, 0.12));
+    for (i = 0; i < 3; i++) {
+      var ly = rand(0.2, 0.75), lx = rand(-0.4, 0.1), ledge = [[lx, ly]];
+      for (k = 0; k < 4; k++) { lx += rand(0.06, 0.12); ly += rand(-0.04, 0.04) + lean * 0.02; ledge.push([lx, ly]); }
+      ledges.push(ledge);
+    }
+    for (i = 0; i < 110; i++) pits.push([rand(-0.55, 0.55), rand(0, 1), rand(0.7, 2.2), rng() < 0.75]);
+    return { fx: fx, fw: fw, fh: fh, pts: pts, facets: facets, grooves: grooves, veins: veins, ledges: ledges, pits: pits };
+  }
+  function defaultScape() {
+    rng = seeded(SCAPE_SEED);
+    rocks = [makeRock(0.33, 0.17, 0.40, 0.45), makeRock(0.19, 0.11, 0.20, -0.2), makeRock(0.43, 0.13, 0.10, 0.6), makeRock(0.78, 0.12, 0.24, -0.4)];
+    rng = Math.random;
+  }
+  function rockGeom(r) {
+    var bx = r.fx * W, w = r.fw * S(), h = r.fh * H;
+    return { bx: bx, w: w, h: h, by: ground(bx) + h * 0.1 };
+  }
+
+  /* ---- setup / resize ---- */
+  function measure() {
+    var s = document.createElement('span'); s.textContent = 'MMMMMMMMMM'; pre.appendChild(s);
+    var r = s.getBoundingClientRect(); pre.removeChild(s);
+    return { w: r.width / 10, h: parseFloat(getComputedStyle(pre).lineHeight) || r.height };
+  }
+  function resize() {
+    var oldW = W, oldH = H, m = measure();
+    OW = tank.clientWidth; OH = tank.clientHeight;
+    cols = Math.ceil(OW / m.w); rows = Math.ceil(OH / m.h);
+    framed = OW >= 900;                       // desktop: show the whole aquarium, glass, light and stand
+    if (framed) {
+      OX = Math.round(OW * 0.07); OY = Math.round(OH * 0.15);
+      W = OW - OX * 2; H = OH - OY - Math.max(OH * 0.17, 110);
+    } else {                                  // phone: start the water below the top nav so the surface doesn't run through it
+      var nav = document.getElementById('topnav');
+      OX = 0; OY = nav ? nav.offsetHeight + 10 : 0; W = OW; H = OH - OY;
+    }
+    cv.width = cols; cv.height = rows;
+    blades = [];
+    for (var x = 0; x < W; x += 2) blades.push({ x: x, h: rand(3, 11), s: (Math.random() * 3) | 0 });
+    tufts = [];
+    for (var i = 0; i < W * 0.5; i++) tufts.push({ fx: Math.random(), fy: Math.random(), r: rand(2, 6), s: (Math.random() * 3) | 0 });
+    if (oldW) fish.forEach(function (f) { f.x *= W / oldW; f.y *= H / oldH; });
+    var n = Math.max(15, Math.min(32, Math.round(W * H / 38000)));
+    while (fish.length < n) spawnFish();
+    fish.length = n;
+    fish.sort(function (a, b) { return a.z - b.z; });
+    if (oldW) shrimp.forEach(function (sh) { sh.x *= W / oldW; sh.y *= H / oldH; });
+    var ns = Math.max(8, Math.min(16, Math.round(W / 90)));
+    while (shrimp.length < ns) {
+      var sx = rand(0.05, 0.95) * W;
+      shrimp.push({ x: sx, y: ground(sx), dir: Math.random() < .5 ? 1 : -1, L: rand(16, 23), speed: rand(0.25, 0.55),
+                    mode: 'pick', timer: rand(10, 120), ph: rand(0, 6.28), ang: 0, curl: 0, vx: 0, vy: 0 });
+    }
+    shrimp.length = ns;
+  }
+  function spawnFish() {
+    fish.push({
+      x: W * rand(0.25, 0.75), y: H * rand(0.2, 0.45), h: rand(-0.3, 0.3) + (Math.random() < .5 ? 0 : Math.PI),
+      sp: rand(1.4, 2), z: rand(0.35, 1), k: rand(0.85, 1.15), pace: rand(0.85, 1.15),
+      ph: rand(0, 6.28), startle: 0, glide: 0, turn: 0
+    });
+  }
+
+  /* ---- simulation ---- */
+  function step() {
+    t += 1 / FPS;
+    var tx = W / 2 + W * 0.3 * Math.sin(t * 0.23), ty = H * (0.32 + 0.1 * Math.sin(t * 0.37 + 1.3));
+    var RR = 70, SR = 28, R2 = RR * RR, S2 = SR * SR, n = fish.length, top = H * 0.12;
+    for (var i = 0; i < n; i++) {
+      var f = fish[i], hx = Math.cos(f.h), hy = Math.sin(f.h);
+      var ax = 0, ay = 0, cx = 0, cy = 0, sx = 0, sy = 0, k = 0, scare = 0, d;
+      for (var j = 0; j < n; j++) {
+        if (i === j) continue;
+        var o = fish[j], dx = o.x - f.x, dy = o.y - f.y, d2 = dx * dx + dy * dy;
+        if (d2 < R2) {
+          ax += Math.cos(o.h); ay += Math.sin(o.h); cx += o.x; cy += o.y; k++;
+          if (o.startle > scare) scare = o.startle;
+          if (d2 < S2) { d = Math.sqrt(d2) + 0.1; sx -= dx / d * (1 - d / SR); sy -= dy / d * (1 - d / SR); }
+        }
+      }
+      // where the fish would like to head: momentum + schooling
+      var Dx = hx * 2, Dy = hy * 2;
+      if (k) {
+        Dx += ax / k * 1.2 + (cx / k - f.x) / RR * 0.8;
+        Dy += ay / k * 1.2 + (cy / k - f.y) / RR * 0.8;
+      }
+      Dx += sx * 2.2; Dy += sy * 2.2;
+
+      // food beats wandering
+      var best = null, bd = 170 * 170;
+      for (j = 0; j < food.length; j++) {
+        var fd = food[j], ddx = fd.x - f.x, ddy = fd.y - f.y, dd = ddx * ddx + ddy * ddy;
+        if (dd < bd) { bd = dd; best = fd; }
+      }
+      if (best) {
+        d = Math.sqrt(bd) + 1;
+        Dx += (best.x - f.x) / d * 2.5; Dy += (best.y - f.y) / d * 2.5;
+        if (d < 9) best.eaten = true;
+      } else {
+        var gx = tx - f.x, gy = ty - f.y, gd = Math.hypot(gx, gy) + 1, gw = 0.5 * Math.min(1, gd / 200);
+        Dx += gx / gd * gw; Dy += gy / gd * gw;
+      }
+
+      // fright: the cursor startles nearby fish, and panic ripples through the school
+      f.startle *= 0.94;
+      if (scare * 0.8 > f.startle) f.startle = scare * 0.8;
+      if (mouse) {
+        var mx = f.x - mouse.x, my = f.y - mouse.y, md = Math.hypot(mx, my) + 1;
+        if (md < 130) { var p = 1 - md / 130; Dx += mx / md * p * 6; Dy += my / md * p * 6; if (p > f.startle) f.startle = p; }
+      }
+
+      // stay off the floor (they're free to pass in front of the stones)
+      var gnd = ground(f.x) - 22;
+      if (f.y < top) Dy += (top - f.y) * 0.08;
+      if (f.y > gnd) Dy -= (f.y - gnd) * 0.08;
+      if (f.x < 40) Dx += (40 - f.x) * 0.05;
+      if (f.x > W - 40) Dx -= (f.x - W + 40) * 0.05;
+
+      // turn gradually toward that heading; fish mostly swim level
+      var want = Math.atan2(Dy * 0.55, Dx);
+      var diff = Math.atan2(Math.sin(want - f.h), Math.cos(want - f.h));
+      var maxTurn = 0.05 + 0.22 * f.startle;
+      var turn = Math.max(-maxTurn, Math.min(maxTurn, diff));
+      f.h += turn; f.turn += (turn - f.turn) * 0.3;
+
+      // burst-and-glide swimming
+      if (f.glide > 0) f.glide--; else if (Math.random() < 0.02) f.glide = (rand(8, 36)) | 0;
+      var gliding = f.glide > 0 && f.startle < 0.1;
+      var target = (gliding ? 1.0 : 1.9) * f.pace + f.startle * 4.5 + (best ? 1.2 : 0);
+      f.sp += (target - f.sp) * (target > f.sp ? 0.15 : 0.04);
+      f.ph += gliding ? 0.04 : 0.2 + f.sp * 0.2;
+    }
+    for (i = 0; i < n; i++) {
+      var q = fish[i], sc = 0.6 + 0.4 * q.z;
+      q.x += Math.cos(q.h) * q.sp * sc; q.y += Math.sin(q.h) * q.sp * sc;
+      // a fish that leapt above the surface makes a splash when it drops back in
+      var out = q.y < swell(q.x);
+      if (q.out && !out) splash(q.x, (20 + 30 * q.z) * q.k);
+      q.out = out;
+    }
+    ripples.forEach(function (r) { r.age++; });
+    ripples = ripples.filter(function (r) { return r.age < 70; });
+    drops = drops.filter(function (d) { d.x += d.vx; d.y += d.vy; d.vy += 0.28; return d.y < swell(d.x) + 2; });
+
+    stepShrimp();
+
+    food = food.filter(function (fd) {
+      if (fd.eaten) return false;
+      var gy = ground(fd.x) - 2;
+      if (fd.y < gy) { fd.y += fd.vy; fd.x += Math.sin(t * 2 + fd.ph) * 0.3; } else fd.life -= 1;
+      return fd.life > 0;
+    });
+  }
+
+  /* ---- painting ---- */
+  var BLADE = ['#4e9a2c', '#74c23f', '#a3e06a'], TUFT = ['#2c6119', '#3f8424', '#5aa832'];
+  function paint() {
+    ctx.setTransform(cols / OW, 0, 0, rows / OH, 0, 0);
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, OW, OH);
+    if (framed) drawFurniture();
+    ctx.save(); ctx.translate(OX, OY); ctx.beginPath(); ctx.rect(0, 0, W, H); ctx.clip();
+
+    // water, lit from above
+    var g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, '#000'); g.addColorStop(0.07, '#000'); g.addColorStop(0.075, '#181d1a');
+    g.addColorStop(0.3, '#101512'); g.addColorStop(0.8, '#060807');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    // surface
+    ctx.strokeStyle = '#59615d'; ctx.lineWidth = 2; ctx.beginPath();
+    for (var x = 0; x <= W; x += 4) { var y = waterY(x); if (x) ctx.lineTo(x, y); else ctx.moveTo(x, y); }
+    ctx.stroke();
+    // rings spreading out from each splash (the near half, seen just under the surface)
+    ripples.forEach(function (r) {
+      var rx = r.age * RING_SPEED, al = 0.9 * Math.exp(-r.age / 26);
+      ctx.strokeStyle = 'rgba(160,172,167,' + al + ')'; ctx.lineWidth = 2;
+      for (var k = 0; k < 2; k++) {
+        var rr = rx * (1 - k * 0.45); if (rr < 3) continue;
+        ctx.beginPath(); ctx.ellipse(r.x, swell(r.x) + 1, rr, rr * 0.09 + 1.5, 0, 0, Math.PI); ctx.stroke();
+      }
+    });
+    ctx.fillStyle = '#9fb0aa';
+    drops.forEach(function (d) { ctx.fillRect(d.x - 1, d.y - 1, 2.5, 2.5); });
+
+    // carpet body
+    ctx.fillStyle = '#3b7f24'; ctx.beginPath(); ctx.moveTo(0, H * SOIL);
+    for (x = 0; x <= W; x += 10) ctx.lineTo(x, ground(x));
+    ctx.lineTo(W, H * SOIL); ctx.fill();
+    tufts.forEach(function (tf) {
+      var tx = tf.fx * W, gy = ground(tx), ty = gy + (H * SOIL - gy) * tf.fy;
+      ctx.fillStyle = TUFT[tf.s]; ctx.beginPath(); ctx.arc(tx, ty, tf.r, 0, 6.2832); ctx.fill();
+    });
+    // soil strip at the front glass
+    ctx.fillStyle = '#120e0a'; ctx.fillRect(0, H * SOIL, W, H);
+
+    // stones
+    rocks.forEach(function (r) {
+      var G = rockGeom(r);
+      function P(p) { return [G.bx + p[0] * G.w, G.by - p[1] * G.h]; }
+      function path(list, close) {
+        ctx.beginPath();
+        list.forEach(function (p, i) { var q = P(p); if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); });
+        if (close) ctx.closePath();
+      }
+      ctx.save();
+      path(r.pts, true);
+      var lg = ctx.createLinearGradient(G.bx - G.w / 2, G.by - G.h, G.bx + G.w / 2, G.by);
+      lg.addColorStop(0, '#aeb0aa'); lg.addColorStop(0.5, '#676964'); lg.addColorStop(1, '#262725');
+      ctx.fillStyle = lg; ctx.fill(); ctx.clip();
+
+      // lit and shadowed faces
+      r.facets.forEach(function (f) {
+        path(f.poly, true);
+        ctx.fillStyle = f.l > 0.5 ? 'rgba(235,236,230,' + ((f.l - 0.5) * 0.55) + ')' : 'rgba(0,0,0,' + ((0.5 - f.l) * 0.7) + ')';
+        ctx.fill();
+      });
+      // pitted surface
+      r.pits.forEach(function (p) {
+        var q = P(p); ctx.fillStyle = p[3] ? 'rgba(10,10,10,.55)' : 'rgba(230,230,225,.45)';
+        ctx.beginPath(); ctx.arc(q[0], q[1], p[2], 0, 6.2832); ctx.fill();
+      });
+      // ledges: a dark undercut with a bright lip above it
+      r.ledges.forEach(function (l) {
+        path(l); ctx.strokeStyle = 'rgba(8,8,8,.85)'; ctx.lineWidth = 3.5; ctx.stroke();
+        ctx.translate(0, -2.5); path(l); ctx.strokeStyle = 'rgba(225,226,220,.6)'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.translate(0, 2.5);
+      });
+      // grooves with a highlight on one edge
+      r.grooves.forEach(function (c) {
+        path(c); ctx.strokeStyle = '#0e0f0e'; ctx.lineWidth = 2.5; ctx.stroke();
+        ctx.translate(1.5, -1.5); path(c); ctx.strokeStyle = 'rgba(215,217,210,.45)'; ctx.lineWidth = 1; ctx.stroke(); ctx.translate(-1.5, 1.5);
+      });
+      // pale calcite veins
+      r.veins.forEach(function (c) { path(c); ctx.strokeStyle = 'rgba(240,240,232,.7)'; ctx.lineWidth = 1.2; ctx.stroke(); });
+      // rim light along the ridge, shadow where the stone meets the carpet
+      path(r.pts.slice(1, -1)); ctx.strokeStyle = 'rgba(235,236,230,.55)'; ctx.lineWidth = 3; ctx.stroke();
+      var ao = ctx.createLinearGradient(0, G.by - G.h * 0.3, 0, G.by);
+      ao.addColorStop(0, 'rgba(0,0,0,0)'); ao.addColorStop(1, 'rgba(0,0,0,.7)');
+      ctx.fillStyle = ao; ctx.fillRect(G.bx - G.w, G.by - G.h * 0.3, G.w * 2, G.h * 0.3);
+      ctx.restore();
+    });
+
+    // carpet blades in front of the stone bases
+    for (var b = 0; b < 3; b++) {
+      ctx.strokeStyle = BLADE[b]; ctx.lineWidth = 1.5; ctx.beginPath();
+      for (var q = 0; q < blades.length; q++) {
+        var bl = blades[q];
+        if (bl.s !== b) continue;
+        var gy = ground(bl.x) + 4;
+        ctx.moveTo(bl.x, gy); ctx.lineTo(bl.x + Math.sin(t + bl.x * 0.05) * 1.2, gy - bl.h);
+      }
+      ctx.stroke();
+    }
+
+    // shrimp
+    shrimp.forEach(drawShrimp);
+
+    // food
+    ctx.fillStyle = '#e9dcc0';
+    food.forEach(function (fd) { ctx.beginPath(); ctx.arc(fd.x, fd.y, 2.6, 0, 6.2832); ctx.fill(); });
+
+    // fish
+    for (var i = 0; i < fish.length; i++) drawFish(fish[i]);
+
+    ctx.restore();
+    if (framed) drawGlass();
+
+    // pixels -> characters; green hues get the green class
+    var px = ctx.getImageData(0, 0, cols, rows).data, out = '', top = RAMP.length - 1;
+    for (var yy = 0; yy < rows; yy++) {
+      var run = '', cur = '';
+      for (var xx = 0; xx <= cols; xx++) {
+        var ch = '', cl = '';
+        if (xx < cols) {
+          var o = (yy * cols + xx) * 4, R = px[o], Gc = px[o + 1], Bc = px[o + 2];
+          var l = (0.3 * R + 0.59 * Gc + 0.11 * Bc) / 255;
+          l = Math.max(0, l - 0.085) / 0.915;
+          ch = RAMP[Math.min(top, (Math.pow(l, 1.05) * top) | 0)];
+          if (ch !== ' ') cl = Gc > R * 1.3 && Gc > Bc * 1.25 ? 'g' : R > Gc * 1.35 && R > Bc * 1.35 ? 'r' : Bc > R * 1.25 && Bc > Gc * 1.02 ? 'b' : '';
+        }
+        if (xx === cols || cl !== cur) {
+          if (run) out += cur ? '<span class="' + cur + '">' + esc(run) + '</span>' : esc(run);
+          run = ''; cur = cl;
+        }
+        run += ch;
+      }
+      out += '\n';
+    }
+    pre.innerHTML = out;
+  }
+  /* ---- shrimp ---- */
+  // Height of whatever a shrimp is standing on: the carpet, or the top of a stone.
+  function surfaceY(x) {
+    var y = ground(x);
+    for (var i = 0; i < rocks.length; i++) {
+      var r = rocks[i], G = rockGeom(r), P = r.pts;
+      for (var k = 0; k < P.length - 1; k++) {
+        var x1 = G.bx + P[k][0] * G.w, x2 = G.bx + P[k + 1][0] * G.w;
+        if ((x - x1) * (x - x2) <= 0 && x1 !== x2) {
+          var y1 = G.by - P[k][1] * G.h, y2 = G.by - P[k + 1][1] * G.h, yy = y1 + (y2 - y1) * (x - x1) / (x2 - x1);
+          if (yy < y) y = yy;
+        }
+      }
+    }
+    return y;
+  }
+
+  function stepShrimp() {
+    shrimp.forEach(function (s) {
+      s.ph += 0.2;
+      s.curl += ((s.mode === 'flip' ? 1 : 0) - s.curl) * 0.2;
+
+      // startled: a flick of the tail shoots the shrimp backwards, then it sinks
+      if (s.mode !== 'flip' && mouse && Math.hypot(s.x - mouse.x, s.y - mouse.y) < 80) {
+        var away = s.x > mouse.x ? 1 : -1;
+        s.mode = 'flip'; s.vx = away * rand(4, 6); s.vy = -rand(2.5, 4); s.dir = -away;
+      }
+      if (s.mode === 'flip') {
+        s.x = Math.max(10, Math.min(W - 10, s.x + s.vx)); s.y += s.vy;
+        s.vx *= 0.92; s.vy = s.vy * 0.93 + 0.12; s.ang *= 0.9;
+        if (s.vy > 0 && s.y >= surfaceY(s.x) - s.L * 0.12) { s.mode = 'pick'; s.timer = rand(20, 60); }
+        return;
+      }
+
+      // food that has settled on the bottom draws them over
+      var target = null, bd = 220;
+      food.forEach(function (fd) {
+        if (fd.y >= ground(fd.x) - 4) { var d = Math.abs(fd.x - s.x); if (d < bd) { bd = d; target = fd; } }
+      });
+      if (target) {
+        s.dir = target.x > s.x ? 1 : -1;
+        if (bd < 6) { target.eaten = true; s.mode = 'pick'; s.timer = 40; } else s.mode = 'walk';
+      }
+
+      if (s.mode === 'pick') {               // stand still and graze
+        if (--s.timer <= 0) { s.mode = 'walk'; s.timer = rand(60, 240); if (Math.random() < .4) s.dir *= -1; }
+      } else {                               // walk along carpet and over stones
+        s.x += s.dir * s.speed * (target ? 2 : 1);
+        if (s.x < 15 || s.x > W - 15) s.dir *= -1;
+        if (!target && --s.timer <= 0) { s.mode = 'pick'; s.timer = rand(30, 140); }
+      }
+      var a = surfaceY(s.x - 5), b = surfaceY(s.x + 5), ty = Math.min(a, b, surfaceY(s.x)) - s.L * 0.12;
+      s.y += (ty - s.y) * 0.25;
+      s.ang += (Math.max(-0.8, Math.min(0.8, Math.atan2(b - a, 10))) - s.ang) * 0.2;
+    });
+  }
+
+  // Side-view shrimp: arched carapace, segmented tail that curls during a flip,
+  // tail fan, rostrum, long antennae, walking legs and picking claws.
+  function drawShrimp(s) {
+    var L = s.L, N = 8, seg = L * 0.85 / N, a = Math.PI + 0.3, x = L * 0.38, y = 0, sp = [];
+    var bend = 0.15 + s.curl * 0.26;
+    for (var i = 0; i <= N; i++) {
+      var u = i / N, w = u < 0.38 ? L * 0.11 : L * (0.11 - 0.075 * (u - 0.38) / 0.62);
+      sp.push({ x: x, y: y, a: a, w: w });
+      x += Math.cos(a) * seg; y += Math.sin(a) * seg; a -= bend;
+    }
+    ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(s.ang); ctx.scale(s.dir, 1);
+
+    var walking = s.mode === 'walk';
+    ctx.strokeStyle = '#c8503c'; ctx.lineWidth = 1.2; ctx.beginPath();
+    // walking legs
+    for (i = 1; i <= 4; i++) {
+      var p = sp[i], st = walking ? Math.sin(s.ph * 1.6 + i * 1.3) * 2.5 : 0;
+      ctx.moveTo(p.x, p.y + p.w * 0.6); ctx.lineTo(p.x + st + 1, p.y + p.w + L * 0.13);
+    }
+    // picking claws work at the mouth while grazing
+    var pk = s.mode === 'pick' ? Math.sin(s.ph * 2.2) * L * 0.05 : 0;
+    ctx.moveTo(sp[0].x, sp[0].y + sp[0].w * 0.5); ctx.lineTo(sp[0].x + L * 0.1, sp[0].y + L * 0.16 + pk);
+    // antennae
+    var wave = Math.sin(s.ph * 0.35) * L * 0.08;
+    ctx.moveTo(L * 0.4, -L * 0.04); ctx.quadraticCurveTo(L * 0.8, -L * 0.42, L * 1.35, -L * 0.18 + wave);
+    ctx.moveTo(L * 0.4, -L * 0.02); ctx.quadraticCurveTo(L * 0.7, -L * 0.2, L * 1.0, L * 0.02 - wave * 0.6);
+    // rostrum
+    ctx.moveTo(L * 0.38, -L * 0.06); ctx.lineTo(L * 0.55, -L * 0.1);
+    ctx.stroke();
+
+    // tail fan
+    var e = sp[N], dx = Math.cos(e.a), dy = Math.sin(e.a), nx = -dy, ny = dx, fl = L * 0.14, fw = L * 0.08;
+    ctx.fillStyle = '#d9533d';
+    ctx.beginPath(); ctx.moveTo(e.x, e.y);
+    ctx.lineTo(e.x + dx * fl + nx * fw, e.y + dy * fl + ny * fw); ctx.lineTo(e.x + dx * fl * 0.8, e.y + dy * fl * 0.8);
+    ctx.lineTo(e.x + dx * fl - nx * fw, e.y + dy * fl - ny * fw); ctx.closePath(); ctx.fill();
+
+    // body
+    ctx.beginPath();
+    for (i = 0; i <= N; i++) { var q = sp[i]; ctx.lineTo(q.x - Math.sin(q.a) * q.w, q.y + Math.cos(q.a) * q.w); }          // back
+    for (i = N; i >= 0; i--) { q = sp[i]; ctx.lineTo(q.x + Math.sin(q.a) * q.w * 0.85, q.y - Math.cos(q.a) * q.w * 0.85); } // belly
+    ctx.closePath();
+    var gr = ctx.createLinearGradient(0, -L * 0.2, 0, L * 0.12);
+    gr.addColorStop(0, '#8e2a1f'); gr.addColorStop(0.5, '#f0634a'); gr.addColorStop(1, '#c4442f');
+    ctx.fillStyle = gr; ctx.fill();
+    // segment lines across the tail
+    ctx.strokeStyle = '#6e2018'; ctx.lineWidth = 1; ctx.beginPath();
+    for (i = 4; i < N; i++) { q = sp[i]; var ox = -Math.sin(q.a) * q.w, oy = Math.cos(q.a) * q.w; ctx.moveTo(q.x + ox, q.y + oy); ctx.lineTo(q.x - ox * 0.85, q.y - oy * 0.85); }
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  /* ---- the aquarium itself (desktop) ---- */
+  function drawFurniture() {
+    var x0 = OX, x1 = OX + W, y0 = OY, y1 = OY + H, ly = Math.round(y0 - OH * 0.075);
+    // light fixture on two slim legs
+    ctx.fillStyle = '#7f8789'; ctx.fillRect(x0 + W * 0.07, ly + 4, 3, y0 - ly - 4); ctx.fillRect(x1 - W * 0.07 - 3, ly + 4, 3, y0 - ly - 4);
+    ctx.fillStyle = '#d2d8d9'; ctx.fillRect(x0 + W * 0.05, ly, W * 0.9, 5);
+    var lg = ctx.createLinearGradient(0, ly, 0, y0);
+    lg.addColorStop(0, 'rgba(255,255,255,.07)'); lg.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = lg; ctx.fillRect(x0 + W * 0.05, ly + 5, W * 0.9, y0 - ly - 5);
+    // stand
+    var sy = y1 + 5, sb = OH - 46;
+    ctx.fillStyle = '#121416'; ctx.fillRect(x0 - 4, sy, W + 8, sb - sy);
+    ctx.strokeStyle = '#3c4345'; ctx.lineWidth = 1.5; ctx.strokeRect(x0 - 4, sy, W + 8, sb - sy);
+    ctx.fillStyle = '#626a6c'; ctx.fillRect(x0 - 4, sy, W + 8, 2);
+    ctx.fillStyle = '#30363a'; ctx.fillRect(x0 + W / 2, sy + 6, 1.5, sb - sy - 10);
+    ctx.fillStyle = '#8a9294'; ctx.fillRect(x0 + W / 2 - 10, sy + (sb - sy) * 0.3, 2, (sb - sy) * 0.25); ctx.fillRect(x0 + W / 2 + 8, sy + (sb - sy) * 0.3, 2, (sb - sy) * 0.25);
+  }
+  function drawGlass() {
+    var x0 = OX, x1 = OX + W, y0 = OY, y1 = OY + H;
+    // glass thickness, seen at the edges
+    ctx.fillStyle = '#3d4547';
+    ctx.fillRect(x0 + 6, y0, 1.5, H); ctx.fillRect(x1 - 7.5, y0, 1.5, H); ctx.fillRect(x0, y1 - 7, W, 1.5);
+    // bright glass edges and rim
+    ctx.strokeStyle = '#aab3b5'; ctx.lineWidth = 2.5; ctx.strokeRect(x0, y0, W, H);
+  }
+
+  function shade(v, r, g, b) { return 'rgb(' + Math.min(255, r * v | 0) + ',' + Math.min(255, g * v | 0) + ',' + Math.min(255, b * v | 0) + ')'; }
+
+  // Side-view neon tetra: slim body that flexes with each tail beat, clear fins,
+  // an electric-blue stripe from nose to tail and a red lower rear half.
+  function drawFish(f) {
+    var L = (20 + 30 * f.z) * f.k, H2 = L * 0.12;
+    var v = (0.45 + 0.55 * f.z) * (0.85 + Math.min(0.4, Math.abs(f.turn) * 6));  // stripe flares when banking
+    var amp = L * (0.025 + 0.012 * Math.min(f.sp, 5));
+    var fore = 0.45 + 0.55 * Math.abs(Math.cos(f.ph));                        // tail foreshortens as it beats
+    ctx.save(); ctx.translate(f.x, f.y); ctx.rotate(f.h);
+    if (Math.cos(f.h) < 0) ctx.scale(1, -1);                                   // keep the back on top
+
+    var N = 10, up = [], dn = [], mid = [];
+    for (var s = 0; s <= N; s++) {
+      var u = s / N, x = L * 0.5 - u * L * 0.78, y = amp * u * u * Math.sin(f.ph - u * 2.4);
+      var w = H2 * (u < 0.28 ? Math.pow(u / 0.28, 0.55) : 1 - 0.75 * (u - 0.28) / 0.72);
+      up.push([x, y - w]); dn.push([x, y + w * 0.9]); mid.push([x, y, w]);
+    }
+    var bx = up[N][0], by = (up[N][1] + dn[N][1]) / 2, tw = amp * 1.6 * Math.sin(f.ph - 2.4);
+    var tx = bx - L * 0.24, spread = L * 0.16 * fore;
+
+    // clear fins
+    ctx.fillStyle = shade(v * 0.55, 160, 170, 172);
+    ctx.beginPath(); ctx.moveTo(bx + 1, by);
+    ctx.lineTo(tx, by + tw - spread); ctx.lineTo(tx + L * 0.08, by + tw); ctx.lineTo(tx, by + tw + spread);
+    ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(up[4][0], up[4][1]); ctx.lineTo(up[5][0] - L * 0.04, up[5][1] - H2 * 0.8); ctx.lineTo(up[6][0], up[6][1]); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(dn[5][0], dn[5][1]); ctx.lineTo(dn[7][0] - L * 0.03, dn[7][1] + H2 * 0.6); ctx.lineTo(dn[7][0], dn[7][1]); ctx.fill();
+
+    // body: olive back, silvery belly
+    ctx.beginPath(); ctx.moveTo(L * 0.52, 0);
+    for (s = 0; s <= N; s++) ctx.lineTo(up[s][0], up[s][1]);
+    for (s = N; s >= 0; s--) ctx.lineTo(dn[s][0], dn[s][1]);
+    ctx.closePath();
+    var gr = ctx.createLinearGradient(0, -H2, 0, H2);
+    gr.addColorStop(0, shade(v, 70, 82, 92)); gr.addColorStop(0.55, shade(v, 214, 220, 222)); gr.addColorStop(1, shade(v, 236, 238, 240));
+    ctx.fillStyle = gr; ctx.fill();
+    ctx.save(); ctx.clip();
+
+    // red lower half, from mid-body back to the tail
+    ctx.fillStyle = shade(v, 236, 46, 38);
+    ctx.beginPath(); ctx.moveTo(mid[4][0], mid[4][1] - mid[4][2] * 0.1);
+    for (s = 4; s <= N; s++) ctx.lineTo(mid[s][0], mid[s][1] - mid[s][2] * (0.1 + 0.9 * Math.max(0, s - 6) / 4));
+    ctx.lineTo(dn[N][0] - 2, dn[N][1] + 2);
+    for (s = N; s >= 4; s--) ctx.lineTo(dn[s][0], dn[s][1] + 2);
+    ctx.closePath(); ctx.fill();
+
+    // neon blue stripe along the upper side
+    ctx.strokeStyle = shade(Math.min(1.25, v * 1.15), 40, 175, 255); ctx.lineWidth = H2 * 1.05; ctx.lineCap = 'round';
+    ctx.beginPath();
+    for (s = 0; s <= 7; s++) { var m = mid[s], yy = m[1] - m[2] * 0.4; if (s) ctx.lineTo(m[0], yy); else ctx.moveTo(m[0] - L * 0.04, yy); }
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.restore();
+  }
+  function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+  /* ---- loop ---- */
+  function frame(now) {
+    raf = 0;
+    if (!visible || document.hidden || reduce) return;
+    raf = requestAnimationFrame(frame);
+    if (now - last < 1000 / FPS) return;
+    last = now; step(); paint();
+  }
+  function kick() {
+    if (reduce) { for (var i = 0; i < 4; i++) step(); paint(); }
+    else if (!raf) raf = requestAnimationFrame(frame);
+  }
+
+  /* ---- interaction ---- */
+  function pos(e) { var r = tank.getBoundingClientRect(); return { x: e.clientX - r.left - OX, y: e.clientY - r.top - OY }; }
+  tank.addEventListener('pointermove', function (e) {
+    var p = pos(e);
+    if (e.pointerType === 'mouse') mouse = p;
+  });
+  tank.addEventListener('pointerleave', function () { mouse = null; });
+  tank.addEventListener('pointerdown', function (e) {
+    if (e.target.closest('.overlay > *, .center')) return;
+    var p = pos(e);
+    if (p.x < 0 || p.x > W || p.y < 0 || p.y > H) return;   // only inside the glass
+    for (var i = 0; i < 7; i++) food.push({ x: p.x + rand(-14, 14), y: Math.max(H * 0.08, p.y + rand(-8, 8)), vy: rand(0.6, 1.2), ph: rand(0, 6.28), life: FPS * 8 });
+    if (e.pointerType !== 'mouse') { mouse = p; setTimeout(function () { mouse = null; }, 400); }
+    kick();
+  });
+  tank.addEventListener('pointercancel', function () { mouse = null; });
+
+  new IntersectionObserver(function (es) { visible = es[0].isIntersecting; if (visible) kick(); }).observe(tank);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) kick(); });
+  addEventListener('resize', function () { resize(); kick(); });
+
+  // the card's button glides down to the projects list
+  document.querySelector('.center a').addEventListener('click', function (e) {
+    e.preventDefault();
+    document.getElementById('work').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    history.replaceState(null, '', '#work');
+  });
+
+  // reveal the centre card after the tank has had a moment on its own
+  setTimeout(function () { tank.classList.add('revealed'); }, reduce ? 0 : 3500);
+
+  defaultScape();
+  resize();
+  for (var w = 0; w < 60; w++) step();   // let the school form first
+  paint();
+  kick();
+})();
+</script>
+</body>
+</html>
