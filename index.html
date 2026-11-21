@@ -59,7 +59,7 @@
   .tank pre .g { color: var(--green); }
   .tank pre .r { color: #e8755f; }
   .tank pre .b { color: #5cc8ff; }
-  @media (max-width: 560px) { .tank pre { font-size: 6px; } }
+  @media (max-width: 560px) { .tank pre { font-size: 7px; } }
   .overlay { position: absolute; left: 0; right: 0; padding: 20px 24px; display: flex; justify-content: space-between; gap: 16px; font-size: 12px; pointer-events: none; }
   .overlay > * { pointer-events: auto; }
   .overlay.bottom { bottom: 0; justify-content: flex-start; }
@@ -444,7 +444,7 @@ document.querySelectorAll('.filters').forEach(function (bar) {
   var FPS = 24;
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var cv = document.createElement('canvas'), ctx = cv.getContext('2d', { willReadFrequently: true });
-  var W, H, cols, rows, OW, OH, OX = 0, OY = 0, framed = false, fish = [], shrimp = [], food = [], rocks = [], blades = [], tufts = [];
+  var W, H, cols, rows, OW, OH, OX = 0, OY = 0, framed = false, fish = [], shrimp = [], food = [], rocks = [], blades = [], tufts = [], SZ = 1;
   var mouse = null, t = 0, visible = true, raf = 0, last = 0;
   var ripples = [], drops = [];
 
@@ -572,12 +572,13 @@ document.querySelectorAll('.filters').forEach(function (bar) {
     tufts = [];
     for (var i = 0; i < W * 0.5; i++) tufts.push({ fx: Math.random(), fy: Math.random(), r: rand(2, 6), s: (Math.random() * 3) | 0 });
     if (oldW) fish.forEach(function (f) { f.x *= W / oldW; f.y *= H / oldH; });
-    var n = Math.max(15, Math.min(32, Math.round(W * H / 38000)));
+    SZ = framed ? 1 : Math.max(0.68, Math.min(1, W / 720));       // phones: smaller fish and shrimp
+    var n = Math.max(framed ? 15 : 9, Math.min(32, Math.round(W * H / 38000)));
     while (fish.length < n) spawnFish();
     fish.length = n;
     fish.sort(function (a, b) { return a.z - b.z; });
     if (oldW) shrimp.forEach(function (sh) { sh.x *= W / oldW; sh.y *= H / oldH; });
-    var ns = Math.max(8, Math.min(16, Math.round(W / 90)));
+    var ns = Math.max(framed ? 8 : 5, Math.min(16, Math.round(W / 90)));
     while (shrimp.length < ns) {
       var sx = rand(0.05, 0.95) * W;
       shrimp.push({ x: sx, y: ground(sx), dir: Math.random() < .5 ? 1 : -1, L: rand(16, 23), speed: rand(0.25, 0.55),
@@ -878,7 +879,7 @@ document.querySelectorAll('.filters').forEach(function (bar) {
   // Side-view shrimp: arched carapace, segmented tail that curls during a flip,
   // tail fan, rostrum, long antennae, walking legs and picking claws.
   function drawShrimp(s) {
-    var L = s.L, N = 8, seg = L * 0.85 / N, a = Math.PI + 0.3, x = L * 0.38, y = 0, sp = [];
+    var L = s.L * SZ, N = 8, seg = L * 0.85 / N, a = Math.PI + 0.3, x = L * 0.38, y = 0, sp = [];
     var bend = 0.15 + s.curl * 0.26;
     for (var i = 0; i <= N; i++) {
       var u = i / N, w = u < 0.38 ? L * 0.11 : L * (0.11 - 0.075 * (u - 0.38) / 0.62);
@@ -958,7 +959,7 @@ document.querySelectorAll('.filters').forEach(function (bar) {
   // Side-view neon tetra: slim body that flexes with each tail beat, clear fins,
   // an electric-blue stripe from nose to tail and a red lower rear half.
   function drawFish(f) {
-    var L = (20 + 30 * f.z) * f.k, H2 = L * 0.12;
+    var L = (20 + 30 * f.z) * f.k * SZ, H2 = L * 0.12;
     var v = (0.45 + 0.55 * f.z) * (0.85 + Math.min(0.4, Math.abs(f.turn) * 6));  // stripe flares when banking
     var amp = L * (0.025 + 0.012 * Math.min(f.sp, 5));
     var fore = 0.45 + 0.55 * Math.abs(Math.cos(f.ph));                        // tail foreshortens as it beats
